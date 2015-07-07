@@ -1,9 +1,9 @@
-TMP_PREFIX := curl
+TMP_PREFIX := XXXcurl
 CURL_VERSION := 7.43.0
 
-CURL_TAR_TEMP := $(shell mktemp -t $TMP_PREFIX)
-CURL_EXTRACT_TEMP := $(shell mktemp -dt $TMP_PREFIX)
-CURL_BUILD_TEMP := $(shell mktemp -dt $TMP_PREFIX)
+CURL_TAR_TEMP := $(shell mktemp -t $(TMP_PREFIX))
+CURL_EXTRACT_TEMP := $(shell mktemp -dt $(TMP_PREFIX))
+CURL_BUILD_TEMP := $(shell mktemp -dt $(TMP_PREFIX))
 
 curl:
 	wget -O $(CURL_TAR_TEMP) http://curl.haxx.se/download/curl-$(CURL_VERSION).tar.gz && \
