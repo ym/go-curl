@@ -29,11 +29,11 @@ curl:
 	--enable-ipv6 \
 	--without-libssh2 \
 	--with-libidn && \
-	make && make install \
+	make && make install
 
 cgo: curl
 	mkdir libcurl && \
-	cp -r $(CURL_BUILD_TEMP)/lib $(CURL_BUILD_TEMP)/include ./libcurl && \
+	cp -r $(CURL_BUILD_TEMP)/lib $(CURL_BUILD_TEMP)/include $(CURL_BUILD_TEMP)/bin ./libcurl && \
 	go build -v .
 
 test: cgo
