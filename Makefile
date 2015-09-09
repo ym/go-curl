@@ -1,5 +1,5 @@
 TMP_PREFIX := XXXcurl
-CURL_VERSION := 7.43.0
+CURL_VERSION := 7.44.0
 
 CURL_TAR_TEMP := $(shell mktemp -t $(TMP_PREFIX))
 CURL_EXTRACT_TEMP := $(shell mktemp -dt $(TMP_PREFIX))
