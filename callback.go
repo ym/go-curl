@@ -17,6 +17,7 @@ import (
 func goGetCurlField(p uintptr, cname *C.char) uintptr {
 	name := C.GoString(cname)
 	curl := (*CURL)(unsafe.Pointer(p))
+
 	switch name {
 	case "readFunction":
 		return reflect.ValueOf(curl.readFunction).Pointer()
@@ -26,6 +27,8 @@ func goGetCurlField(p uintptr, cname *C.char) uintptr {
 		return reflect.ValueOf(curl.writeFunction).Pointer()
 	case "progressFunction":
 		return reflect.ValueOf(curl.progressFunction).Pointer()
+	case "debugFunction":
+		return reflect.ValueOf(curl.debugFunction).Pointer()
 	case "headerData":
 		return uintptr(unsafe.Pointer(curl.headerData))
 	case "writeData":
@@ -34,6 +37,8 @@ func goGetCurlField(p uintptr, cname *C.char) uintptr {
 		return uintptr(unsafe.Pointer(curl.readData))
 	case "progressData":
 		return uintptr(unsafe.Pointer(curl.progressData))
+	case "debugData":
+		return uintptr(unsafe.Pointer(curl.debugData))
 	}
 
 	warnf("Field not found: %s", name)
@@ -67,6 +72,25 @@ func goCallProgressCallback(f *func(float64, float64, float64, float64, interfac
 	// fdltotal, fdlnow, fultotal, fulnow
 	ok := (*f)(float64(dltotal), float64(dlnow), float64(ultotal), float64(ulnow), userdata)
 	// non-zero va lue will cause libcurl to abort the transfer and return Error
+	if ok {
+		return 0
+	}
+	return 1
+}
+
+//export goCallDebugCallback
+func goCallDebugCallback(f *func(int, []byte) bool,
+	info int,
+	ptr *C.char,
+	size C.size_t,
+	userdata interface{},
+) int {
+	buf := C.GoBytes(
+		unsafe.Pointer(ptr),
+		C.int(size),
+	)
+	ok := (*f)(info, buf)
+
 	if ok {
 		return 0
 	}
